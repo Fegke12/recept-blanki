@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Рецептурные бланки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap">
+<style>
+/* Layout: fixed 1280×720 stage scaled to fit (16:9), official-form paper objects on a cool clinical ground; fluid single-column below 760px */
+:root{
+  --bg:#EEF3F9; --surface:#FFFFFF; --surface-2:#F5F8FC; --wash:#E3EDF8;
+  --ink:#13284A; --ink-2:#4B5D78; --ink-3:#7686A0; --line:#D3DDEA;
+  --accent:#B83F68; --accent-soft:#F7E1E9; --navy:#1C3A6B;
+  --ok:#1D7A57; --ok-soft:#DDF1E8; --bad:#B3342F; --bad-soft:#F8E1DF;
+  --sheet:#FFFFFF; --sheet-ink:#1D2638; --sheet-line:#C9D2DF; --sheet-pen:#2045A6; --pink-paper:#F5D7E1;
+  --shadow:0 1px 2px rgba(19,40,74,.06),0 8px 24px rgba(19,40,74,.08);
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --f-hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C1524; --surface:#132036; --surface-2:#0F1A2D; --wash:#18294A;
+  --ink:#E4EBF5; --ink-2:#A6B5CC; --ink-3:#7D8DA8; --line:#26385A;
+  --accent:#E57C9F; --accent-soft:#3A1E2C; --navy:#9DB8E8;
+  --ok:#52C496; --ok-soft:#14352A; --bad:#F07B74; --bad-soft:#3C1C1C;
+  --sheet:#ECEFF4; --sheet-ink:#1D2638; --sheet-line:#BDC7D5; --sheet-pen:#2045A6; --pink-paper:#E9CBD6;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1524; --surface:#132036; --surface-2:#0F1A2D; --wash:#18294A;
+  --ink:#E4EBF5; --ink-2:#A6B5CC; --ink-3:#7D8DA8; --line:#26385A;
+  --accent:#E57C9F; --accent-soft:#3A1E2C; --navy:#9DB8E8;
+  --ok:#52C496; --ok-soft:#14352A; --bad:#F07B74; --bad-soft:#3C1C1C;
+  --sheet:#ECEFF4; --sheet-ink:#1D2638; --sheet-line:#BDC7D5; --sheet-pen:#2045A6; --pink-paper:#E9CBD6;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mono{font-family:var(--f-mono)}
+
+/* ===== app frame ===== */
+.app{height:100%;display:grid;grid-template-rows:auto 1fr auto}
+.top{display:flex;align-items:center;gap:16px;padding:10px 20px;border-bottom:1px solid var(--line);background:var(--surface);min-width:0}
+.brand{display:flex;align-items:center;gap:10px;border:0;background:none;padding:4px;font-weight:600;font-size:15px;white-space:nowrap}
+.brand .mk{width:30px;height:30px;border-radius:7px;background:var(--navy);color:var(--surface);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:15px}
+.sections{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0;margin-left:auto}
+.sections::-webkit-scrollbar{display:none}
+.sections button{border:1px solid transparent;background:none;padding:6px 12px;border-radius:999px;font-size:13.5px;color:var(--ink-2);white-space:nowrap}
+.sections button:hover{background:var(--surface-2);color:var(--ink)}
+.sections button[aria-current="true"]{background:var(--wash);color:var(--ink);border-color:var(--line);font-weight:600}
+
+.viewport{position:relative;overflow:hidden;min-height:0}
+.deck{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+
+.bar{display:flex;align-items:center;gap:12px;padding:10px 20px;border-top:1px solid var(--line);background:var(--surface)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:8px 16px;border-radius:9px;font-size:14px;font-weight:600;letter-spacing:.02em}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--surface)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
+.prog{flex:1;display:flex;align-items:center;gap:12px;min-width:0}
+.track{flex:1;height:4px;border-radius:4px;background:var(--wash);overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.count{font-family:var(--f-mono);font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ===== slides ===== */
+.slide{position:absolute;inset:0;padding:40px 56px 30px;display:none;flex-direction:column;gap:20px}
+.slide.active{display:flex;animation:slideIn .35s ease both}
+@keyframes slideIn{from{opacity:.0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.active{animation:none}.track i{transition:none}}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.eyebrow{margin:0 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1,h2,h3{margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:700;font-size:38px;line-height:1.1;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600;line-height:1.25}
+.lead{color:var(--ink-2);font-size:16px;margin:0;max-width:62ch}
+.body{flex:1;min-height:0;display:flex;flex-direction:column;gap:18px}
+.src{margin:0;font-size:12px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:10px}
+.src b{font-weight:600;color:var(--ink-2)}
+.snum{font-family:var(--f-mono);font-size:13px;color:var(--ink-3);white-space:nowrap}
+p{margin:0}
+.muted{color:var(--ink-2)}
+.small{font-size:13.5px}
+
+.card{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.ic{width:38px;height:38px;border-radius:10px;background:var(--wash);color:var(--navy);display:grid;place-items:center;flex:none}
+.ic svg.i{width:20px;height:20px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--wash);color:var(--navy);white-space:nowrap}
+.tag.rose{background:var(--accent-soft);color:var(--accent)}
+.code{font-family:var(--f-mono);font-weight:600;letter-spacing:-.01em}
+
+/* grid helpers */
+.row{display:flex;gap:18px;min-height:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+
+/* ===== paper sheet (form) ===== */
+.sheet{background:var(--sheet);color:var(--sheet-ink);border:1px solid var(--sheet-line);border-radius:4px;box-shadow:var(--shadow);padding:14px 18px 12px;font-size:11.5px;line-height:1.35;position:relative;display:flex;flex-direction:column;gap:7px}
+.sheet .tp{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sheet .stp{border:1.5px solid #6C7FA6;color:#3E4F72;border-radius:3px;padding:5px 8px;font-size:10.5px;line-height:1.3;max-width:52%}
+.sheet .fid{text-align:right;font-size:9.5px;color:#4D5870;line-height:1.3}
+.sheet .fid b{display:block;font-size:11px;color:var(--sheet-ink)}
+.sheet .ttl{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--sheet-line);padding-bottom:6px}
+.sheet .ttl b{font-size:14px;letter-spacing:.12em}
+.sheet .ttl .sub{font-size:10px;color:#5A6680}
+.sheet .ttl .dt{margin-left:auto}
+.sheet .ln{display:flex;align-items:baseline;gap:8px;border-bottom:1px dotted var(--sheet-line);padding:2px 0 3px;min-height:26px}
+.sheet .lab{font-size:10px;color:#5A6680;flex:none;max-width:48%}
+.sheet .val{flex:1;min-width:0}
+.sheet .rp{display:grid;grid-template-columns:44px 1fr;gap:0 10px;border-top:1px solid var(--sheet-line);border-bottom:1px solid var(--sheet-line);padding:6px 0}
+.sheet .rub{border-right:1px solid var(--sheet-line);font-size:9px;color:#5A6680;text-align:center;padding-top:3px}
+.sheet .rpb{display:flex;flex-direction:column;gap:4px;min-height:86px;justify-content:center}
+.sheet .sig{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px}
+.sheet .sig .lab{max-width:none;flex:1;min-width:0}
+.sheet .mp{width:52px;height:52px;border:1.5px dashed #8A98B6;border-radius:50%;display:grid;place-items:center;font-size:10px;color:#6C7A98;flex:none}
+.sheet .valid{font-size:10px;color:#3E4A62}
+.hw{font-family:var(--f-hand);color:var(--sheet-pen);font-size:21px;line-height:1;font-weight:600}
+.ph{color:#8A96AE;font-style:italic;font-size:11px}
+.u{text-decoration:underline;text-underline-offset:2px}
+.wm{position:absolute;right:0;bottom:-30px;font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;color:rgba(184,63,104,.45);border:1.5px solid rgba(184,63,104,.4);padding:3px 8px;border-radius:3px;pointer-events:none}
+/* highlightable zones */
+[data-k]{border-radius:4px;transition:background .2s, box-shadow .2s}
+.zone-on{background:rgba(184,63,104,.12);box-shadow:0 0 0 2px rgba(184,63,104,.75)}
+.pin{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#B83F68;color:#fff;font:600 10px/1 var(--f-mono);flex:none;vertical-align:middle;margin-right:3px}
+
+/* ===== S1 ===== */
+.s1{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;align-items:center;height:100%}
+.s1 h1{font-family:var(--f-display);font-weight:700;font-size:76px;line-height:1;letter-spacing:-.02em;text-transform:uppercase}
+.s1 h1 span{display:block;color:var(--accent)}
+.s1 .subt{font-size:22px;color:var(--ink-2);margin-top:18px;max-width:28ch;line-height:1.35}
+.s1 .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.s1 .cta{margin-top:30px}
+.stack{position:relative;height:500px}
+.stack .pink{position:absolute;right:18px;top:10px;width:300px;height:430px;background:var(--pink-paper);border-radius:4px;transform:rotate(7deg);box-shadow:var(--shadow);padding:20px;color:#7A3550;font-size:11px}
+.stack .pink b{display:block;font-family:var(--f-mono);font-size:13px;margin-bottom:6px}
+.stack .pink .lines i{display:block;height:1px;background:rgba(122,53,80,.25);margin:20px 0}
+.stack .sheet{position:absolute;left:10px;top:40px;width:340px;transform:rotate(-3deg)}
+.pen{position:absolute;right:40px;bottom:30px;width:300px;height:16px;transform:rotate(-38deg);border-radius:8px;background:linear-gradient(180deg,#2C4B86,#162E5C);box-shadow:var(--shadow)}
+.pen::before{content:"";position:absolute;left:-22px;top:0;border-right:22px solid #C9D2DF;border-top:8px solid transparent;border-bottom:8px solid transparent}
+.pen::after{content:"";position:absolute;right:30px;top:-6px;width:70px;height:6px;background:#9FB0CE;border-radius:3px}
+.emblem{position:absolute;right:0;top:-6px;width:96px;height:96px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;box-shadow:var(--shadow);color:var(--navy)}
+.emblem svg{width:60px;height:60px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== S2 ===== */
+.def{font-family:var(--f-display);font-size:27px;line-height:1.3;font-weight:600;color:var(--ink);border-left:3px solid var(--accent);padding:4px 0 4px 22px;max-width:30ch}
+.s2{display:grid;grid-template-columns:1fr 1.25fr;gap:36px;align-items:start;flex:1}
+.s2 .left{display:flex;flex-direction:column;gap:22px}
+.s2 .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.s2 .card{display:flex;flex-direction:column;gap:8px}
+.s2 .card p{font-size:14.5px;color:var(--ink-2)}
+.pf{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink-2)}
+
+/* ===== S3 ===== */
+.fn{display:flex;flex-direction:column;gap:10px}
+.fn h3{font-size:15.5px}
+.fn p{font-size:13.5px;color:var(--ink-2)}
+.flow{display:flex;align-items:stretch;gap:0;margin-top:4px}
+.node{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);text-align:center;min-width:0}
+.node .ic{width:52px;height:52px;border-radius:50%}
+.node .ic svg.i{width:26px;height:26px}
+.node b{font-size:16px}
+.node[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.node[aria-pressed="true"] .ic{background:var(--accent);color:#fff}
+.arr{flex:0 0 46px;display:grid;place-items:center;color:var(--ink-3)}
+.caption{display:flex;gap:14px;align-items:center;background:var(--wash);border-radius:12px;padding:14px 18px;font-size:15px;min-height:58px}
+.caption b{color:var(--navy)}
+
+/* ===== S4 ===== */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:3px;background:var(--surface-2)}
+.seg button{border:0;background:none;padding:6px 14px;border-radius:7px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(19,40,74,.12)}
+.s4{display:grid;grid-template-columns:300px 1fr;gap:20px;flex:1;min-height:0}
+.ftabs{display:flex;flex-direction:column;gap:10px}
+.ftab{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center}
+.ftab .chip{width:30px;height:40px;border-radius:3px;border:1px solid var(--sheet-line);background:var(--sheet);flex:none;position:relative}
+.ftab .chip::after{content:"";position:absolute;left:5px;right:5px;top:10px;height:14px;background:repeating-linear-gradient(180deg,#C9D2DF 0 1px,transparent 1px 5px)}
+.ftab .chip.pinkc{background:var(--pink-paper)}
+.ftab .chip.dbl{box-shadow:4px 4px 0 -1px var(--sheet),4px 4px 0 0 var(--sheet-line)}
+.ftab b{display:block;font-family:var(--f-mono);font-size:15.5px}
+.ftab span{font-size:12.5px;color:var(--ink-2)}
+.ftab[aria-selected="true"]{border-color:var(--navy);box-shadow:inset 3px 0 0 var(--navy);background:var(--surface-2)}
+.fdet{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;min-height:0}
+.fdet .card h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.fdet ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:14px}
+.fdet li::marker{color:var(--accent)}
+.fhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.fhead .code{font-size:26px;color:var(--navy)}
+.fhead .nm{font-size:15px;color:var(--ink-2);flex:1;min-width:0}
+.tbl-wrap{overflow:auto;min-height:0}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}
+table.t th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:8px 12px;border-bottom:2px solid var(--line);background:var(--surface)}
+table.t td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t td:first-child{font-family:var(--f-mono);font-weight:600;color:var(--navy);white-space:nowrap}
+table.t tr:nth-child(even) td{background:var(--surface-2)}
+
+/* ===== S5/S6/S12 split ===== */
+.split{display:grid;grid-template-columns:440px 1fr;gap:30px;flex:1;min-height:0;align-items:start}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.li{display:flex;gap:10px;align-items:flex-start;padding:5px 9px;border-radius:9px;border:1px solid transparent;text-align:left;background:none}
+.li:hover,.li.on{background:var(--surface-2);border-color:var(--line)}
+.li .n{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font:600 11px/22px var(--f-mono);text-align:center;flex:none}
+.li b{display:block;font-size:14px}
+.li span{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.steps{display:flex;flex-direction:column;gap:2px}
+.st{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;text-align:left;padding:4px 10px;border:1px solid transparent;border-radius:10px;background:none}
+.st .n{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);font:600 12px/23px var(--f-mono);text-align:center;color:var(--ink-2)}
+.st b{font-size:14px;display:block;line-height:1.25}
+.st span{font-size:12.5px;color:var(--ink-2);line-height:1.3}
+.st.on{background:var(--accent-soft);border-color:transparent}
+.st.on .n{background:var(--accent);border-color:var(--accent);color:#fff}
+.st.done .n{border-color:var(--accent);color:var(--accent)}
+.ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ===== S7 ===== */
+.s7{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;flex:1;min-height:0}
+.abbr{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-content:start}
+.ab{display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:12px 14px}
+.ab .code{font-size:22px;color:var(--navy)}
+.ab i{font-style:italic;font-size:12.5px;color:var(--ink-3)}
+.ab b{font-size:14.5px}
+.ab span{font-size:12.5px;color:var(--ink-2)}
+.ab.on{border-color:var(--accent);background:var(--accent-soft)}
+.xk{cursor:pointer;border-radius:3px;padding:0 2px}
+.xk.on{background:rgba(184,63,104,.16);box-shadow:0 0 0 1.5px rgba(184,63,104,.7)}
+.lang{display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+.lang div{display:flex;gap:10px;align-items:flex-start}
+
+/* ===== S8 ===== */
+.err{display:flex;flex-direction:column;gap:8px}
+.err .hd{display:flex;gap:12px;align-items:center}
+.err .ic{background:var(--bad-soft);color:var(--bad)}
+.err p{font-size:13.5px;color:var(--ink-2)}
+.err .cons{margin-top:auto;display:flex;gap:8px;align-items:flex-start;font-size:13.5px;border-top:1px dashed var(--line);padding-top:8px;color:var(--ink)}
+.err .cons svg{color:var(--accent);margin-top:1px;width:16px;height:16px}
+.err .ref{font-size:11.5px;color:var(--ink-3);font-family:var(--f-mono)}
+
+/* ===== S9 ===== */
+.acc{display:flex;flex-direction:column;gap:8px}
+.acc details{border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.acc summary{list-style:none;display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;font-weight:600;font-size:15px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";margin-left:auto;font-family:var(--f-mono);font-size:18px;color:var(--ink-3)}
+.acc details[open] summary::after{content:"–"}
+.acc details[open]{background:var(--surface);border-color:var(--navy)}
+.acc .ab2{padding:0 16px 14px 66px;font-size:14px;color:var(--ink-2)}
+.acc .ab2 ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.flow.sm .node{flex-direction:row;padding:10px 14px;gap:12px;text-align:left}
+.flow.sm .node .ic{width:40px;height:40px}
+.flow.sm .node .ic svg.i{width:20px;height:20px}
+.flow.sm .node b{font-size:15px}
+.flow.sm .arr{flex-basis:34px}
+
+/* ===== S10 ===== */
+.cmp th:nth-child(2),.cmp th:nth-child(3){width:41%}
+.cmp td:first-child{font-family:var(--f-body)!important;color:var(--ink)!important;font-weight:600}
+.cmp th .tag{font-size:12px}
+.note{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);background:var(--wash);border-radius:10px;padding:10px 14px}
+.note svg{color:var(--navy)}
+
+/* ===== S11 ===== */
+.path{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.path::before{content:"";position:absolute;left:7%;right:7%;top:31px;height:2px;background:var(--line)}
+.pn{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;border:0;background:none;padding:0}
+.pn .dot{width:64px;height:64px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;color:var(--navy);transition:all .25s}
+.pn .dot svg.i{width:26px;height:26px}
+.pn b{font-size:14.5px;line-height:1.2}
+.pn small{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.pn.on .dot{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.06)}
+.pn.past .dot{border-color:var(--accent);color:var(--accent)}
+.pc{font-size:13px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 11px;text-align:left;line-height:1.4}
+.pc.on{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+
+/* ===== S12 ===== */
+.sheet .hot{cursor:pointer}
+.sheet .hot:hover{background:rgba(32,69,166,.07)}
+.sheet .hot.mark{background:rgba(255,190,60,.25);box-shadow:0 0 0 2px rgba(205,140,20,.8)}
+.sheet .hot.good{background:rgba(29,122,87,.14);box-shadow:0 0 0 2px rgba(29,122,87,.85)}
+.sheet .hot.miss{background:rgba(179,52,47,.12);box-shadow:0 0 0 2px rgba(179,52,47,.85)}
+.strike{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--sheet-pen)}
+.ans{display:flex;flex-direction:column;gap:10px}
+.ansi{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2)}
+.ansi .n{width:26px;height:26px;border-radius:50%;background:var(--bad);color:#fff;font:600 12px/26px var(--f-mono);text-align:center;flex:none}
+.ansi b{display:block;font-size:15px;margin-bottom:2px}
+.ansi p{font-size:13.5px;color:var(--ink-2)}
+.ansi .st2{font-size:12px;font-weight:600;margin-top:4px}
+.ansi .st2.y{color:var(--ok)} .ansi .st2.n2{color:var(--bad)}
+.hint{display:flex;gap:12px;font-size:14.5px;color:var(--ink-2);align-items:flex-start}
+
+/* ===== S13 quiz ===== */
+.quiz{display:grid;grid-template-columns:1fr 300px;gap:28px;flex:1;min-height:0}
+.qbox{display:flex;flex-direction:column;gap:14px;min-width:0}
+.qmeta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--ink-3);font-family:var(--f-mono)}
+.qdots{display:flex;gap:6px}
+.qdots i{width:22px;height:5px;border-radius:3px;background:var(--wash)}
+.qdots i.cur{background:var(--navy)} .qdots i.r{background:var(--ok)} .qdots i.w{background:var(--bad)}
+.qq{font-family:var(--f-display);font-size:26px;font-weight:600;line-height:1.25}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:11px 14px;font-size:15px}
+.opt .l{width:26px;height:26px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font:600 12px var(--f-mono);flex:none}
+.opt:hover:not(:disabled){border-color:var(--navy)}
+.opt:disabled{cursor:default}
+.opt.r{border-color:var(--ok);background:var(--ok-soft)}
+.opt.r .l{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.w{border-color:var(--bad);background:var(--bad-soft)}
+.opt.w .l{background:var(--bad);border-color:var(--bad);color:#fff}
+.expl{font-size:14px;color:var(--ink-2);border-left:3px solid var(--ok);padding:4px 0 4px 14px}
+.expl.bad{border-color:var(--bad)}
+.expl b{color:var(--ink)}
+.score{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.score .big{font-family:var(--f-display);font-size:64px;font-weight:700;line-height:1;color:var(--navy)}
+.qside{display:flex;flex-direction:column;gap:10px}
+
+/* ===== S14 / S15 / S16 ===== */
+.facts{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;flex:1;align-content:start}
+.fact{grid-column:span 2;display:flex;flex-direction:column;gap:10px}
+.fact.w{grid-column:span 3}
+.fact .big{font-family:var(--f-display);font-size:40px;line-height:1;color:var(--accent);font-weight:700}
+.fact p{font-size:14.5px}
+.fact .fsrc{margin-top:auto;font-size:11.5px;color:var(--ink-3)}
+.s15{display:grid;grid-template-columns:360px 1fr;gap:40px;flex:1;align-items:start}
+.s15 h2{font-size:46px}
+.keys{display:flex;flex-direction:column;gap:10px;counter-reset:k}
+.key{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;padding:12px 16px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.key::before{counter-increment:k;content:counter(k);font-family:var(--f-display);font-size:30px;font-weight:700;color:var(--accent);line-height:1}
+.key b{display:block;font-size:15.5px;margin-bottom:2px}
+.key span{font-size:14px;color:var(--ink-2)}
+.srcs{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;flex:1;min-height:0}
+.sg h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.sg ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px;font-size:13.5px}
+.sg li::marker{font-family:var(--f-mono);color:var(--ink-3);font-size:12px}
+.sg a{color:var(--navy);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.sg .wh{display:block;font-size:12px;color:var(--ink-3)}
+
+
+.node p.nd{font-size:13.5px;color:var(--ink-2);line-height:1.4}
+.flow.sm .node{align-items:flex-start}
+.flow.sm .node p.nd{font-size:12.5px;margin-top:2px}
+.flow.sm .node b{display:block}
+.req .card{display:flex;flex-direction:column;gap:8px}
+.rh{display:flex;align-items:center;gap:12px}
+.req p,.req ul,.tasks p,.tasks ul{font-size:14px;color:var(--ink-2)}
+.req ul,.tasks ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.req li::marker,.tasks li::marker{color:var(--accent)}
+.tasks{display:flex;flex-direction:column;gap:14px;min-width:0}
+.tasks .card{display:flex;flex-direction:column;gap:10px}
+.sheet .miss{background:rgba(179,52,47,.10);box-shadow:0 0 0 2px rgba(179,52,47,.85);border-radius:4px}
+.ans .ref{font-size:11.5px;color:var(--ink-3);font-family:var(--f-mono);margin-top:3px}
+.qgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px 28px;align-content:start}
+.qi{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qt{font-weight:600;font-size:15px;display:flex;gap:10px;align-items:baseline}
+.qn{font-family:var(--f-display);font-weight:700;color:var(--accent);font-size:18px;flex:none;width:16px}
+.qo{list-style:none;margin:0;padding:0 0 0 26px;display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;font-size:12.5px;color:var(--ink-2)}
+.qo li{display:flex;gap:6px;align-items:baseline}
+.qo .l,.al{font:600 11px var(--f-mono);color:var(--navy);background:var(--wash);border-radius:4px;padding:1px 5px;flex:none}
+.al{font-size:14px;padding:3px 9px;background:var(--ok-soft);color:var(--ok)}
+table.qa td{padding:7px 12px;font-size:13.5px}
+table.qa td:first-child{font-family:var(--f-display);font-size:17px;color:var(--accent)}
+table.qa td:last-child{white-space:nowrap;color:var(--ink-3)}
+@media (max-width:760px){.qgrid,.qo{grid-template-columns:1fr}}
+
+#pc11::before{display:none}
+#pc11 .pc{font-size:14px}
+.flow.sm .node{display:grid;grid-template-columns:40px 1fr;column-gap:12px;row-gap:2px;align-items:start}
+.flow.sm .node .ic{grid-row:span 2}
+.qt{font-size:16px}
+.qo{font-size:13.5px;gap:3px 16px}
+.qgrid{gap:12px 32px}
+table.qa td{font-size:15px;padding:9px 12px}
+#s4table table.t{font-size:15.5px}
+#s4table table.t td{padding:14px 12px}
+.fact p{font-size:15.5px}
+/* ===== overview ===== */
+.ov{position:fixed;inset:0;background:rgba(10,20,40,.45);display:grid;place-items:center;padding:20px;z-index:20}
+.ovp{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);width:min(980px,100%);max-height:100%;overflow:auto;padding:22px 24px}
+.ovh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ovh h3{font-family:var(--f-display);font-size:24px}
+.ovg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ovg button{text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-height:84px}
+.ovg button:hover{border-color:var(--navy)}
+.ovg button[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.ovg .k{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3)}
+.ovg .t{font-size:14px;font-weight:600;line-height:1.25}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:9px;width:36px;height:36px;display:grid;place-items:center}
+
+/* ===== fluid (phones / narrow) ===== */
+@media (max-width:760px){
+  .app{height:auto;min-height:100%;display:block}
+  .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;padding:8px 16px;flex-wrap:wrap;gap:8px}
+  .sections{margin-left:0;width:100%}
+  .viewport{overflow:visible}
+  .deck{position:static;width:auto;height:auto;transform:none!important;border-radius:0;box-shadow:none;background:transparent;padding-inline:16px}
+  .slide{position:static;padding:22px 0 28px}
+  .bar{position:sticky;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+  .bar .lbl{display:none}
+  .bar .btn{padding:8px 12px}
+  h2{font-size:28px}
+  .sh{flex-direction:column;align-items:flex-start}
+  .s1,.s2,.s4,.split,.s7,.quiz,.s15,.srcs,.fdet,.g2,.g3,.g5,.s2 .cards,.legend,.abbr{grid-template-columns:1fr}
+  .s1 h1{font-size:44px}
+  .s1 .subt{font-size:18px}
+  .stack{height:380px;max-width:360px}
+  .stack .sheet{width:260px}
+  .stack .pink{width:220px;height:330px}
+  .pen{width:200px}
+  .def{font-size:21px}
+  .flow{flex-direction:column}
+  .arr{flex-basis:28px;transform:rotate(90deg)}
+  .facts{grid-template-columns:1fr}
+  .fact,.fact.w{grid-column:auto}
+  .path{grid-template-columns:1fr}
+  .path::before{display:none}
+  .pn{flex-direction:row;text-align:left}
+  .pn .dot{width:48px;height:48px;flex:none}
+  .ovg{grid-template-columns:1fr 1fr}
+  .s15 h2{font-size:32px}
+  .sheet{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h8M9 17h6"/></symbol>
+  <symbol id="i-steth" viewBox="0 0 24 24"><path d="M5 3v6a5 5 0 0 0 10 0V3"/><path d="M10 14v2a5 5 0 0 0 10 0v-3"/><circle cx="20" cy="11" r="2"/></symbol>
+  <symbol id="i-pharm" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5 10v10h14V10"/><path d="M12 12v6M9 15h6"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M8.5 8.5l7 7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+  <symbol id="i-r" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-l" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16"/></symbol>
+  <symbol id="i-sign" viewBox="0 0 24 24"><path d="M3 16c3-6 5-10 7-10s-1 9 1 9 3-4 5-4 1 4 5 4"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v5h5"/></symbol>
+  <symbol id="i-cons" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<div class="app">
+  <header class="top">
+    <button class="brand" data-go="0" aria-label="К титульному слайду"><span class="mk">Rp</span><span>Рецептурные бланки</span></button>
+    <nav class="sections" id="secnav" aria-label="Разделы"></nav>
+  </header>
+
+  <main class="viewport" id="vp">
+    <div class="deck" id="deck">
+
+<!-- ============ 1 ============ -->
+<section class="slide" data-sec="Основы" data-title="Рецептурные бланки">
+  <div class="s1">
+    <div>
+      <p class="eyebrow">Учебная презентация · медицина и фармация</p>
+      <h1>Рецептурные <span>бланки</span></h1>
+      <p class="subt">Виды, назначение, структура и правила оформления</p>
+      <div class="meta">
+        <span class="tag"><svg class="i"><use href="#i-doc"/></svg>4 формы бланков</span>
+        <span class="tag"><svg class="i"><use href="#i-phone"/></svg>бумажный и электронный рецепт</span>
+        <span class="tag rose"><svg class="i"><use href="#i-shield"/></svg>по приказу Минздрава России № 1094н</span>
+      </div>
+      
+    </div>
+    <div class="stack" aria-hidden="true">
+      <div class="pink"><b>Форма № 107/у-НП</b>Специальный рецептурный бланк<div class="lines"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="sheet">
+        <div class="tp"><div class="stp">Штамп<br>медицинской организации</div><div class="fid">Министерство здравоохранения<br>Российской Федерации<b>Форма № 107-1/у</b></div></div>
+        <div class="ttl"><b>РЕЦЕПТ</b><span class="sub"><span class="u">взрослый</span>, детский</span></div>
+        <div class="ln"><span class="lab">Ф. И. О. пациента</span><span class="val ph">…</span></div>
+        <div class="ln"><span class="lab">Дата рождения</span><span class="val ph">…</span></div>
+        <div class="rp"><div class="rub">руб.|коп.</div><div class="rpb"><span class="hw">Rp.: …</span><span class="hw">D.S. …</span></div></div>
+        <div class="sig"><span class="lab">Подпись и печать лечащего врача</span><span class="mp">М.П.</span></div>
+        <div class="valid">Рецепт действителен в течение 60 дней, до 1 года</div>
+      </div>
+      <div class="pen"></div>
+      <div class="emblem" title="Чаша Гигиеи — символ фармации">
+        <svg viewBox="0 0 80 80"><path d="M18 38h44c0 11-10 18-22 18S18 49 18 38z"/><path d="M40 56v10M30 70h20"/><path d="M50 37c4-5 2-10-4-11s-9-6-5-11 10-3 11 1"/><circle cx="53" cy="16" r="2.4"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="slide" data-sec="Основы" data-title="Что такое рецептурный бланк?">
+  <div class="sh"><div><p class="eyebrow">Основы</p><h2>Что такое рецептурный бланк?</h2></div><span class="snum"></span></div>
+  <div class="s2">
+    <div class="left">
+      <p class="def">Рецептурный бланк — утверждённая форма документа, на которой медицинский работник оформляет назначение лекарственного препарата конкретному пациенту.</p>
+      <div class="pf"><span class="ic"><svg class="i"><use href="#i-phone"/></svg></span><span>Рецепт оформляют на бумаге или, с согласия пациента, в форме электронного документа с усиленной квалифицированной электронной подписью.</span></div>
+      <div class="pf"><span class="ic"><svg class="i"><use href="#i-user"/></svg></span><span>Рецепт всегда оформляется на имя пациента, для которого предназначен препарат.</span></div>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="ic"><svg class="i"><use href="#i-doc"/></svg></span><h3>Для чего</h3><p>Чтобы зафиксировать назначение: какой препарат, в какой дозе, сколько и как принимать.</p></div>
+      <div class="card"><span class="ic"><svg class="i"><use href="#i-steth"/></svg></span><h3>Кто оформляет</h3><p>Лечащий врач; фельдшер или акушерка, если на них возложены функции лечащего врача; ИП с лицензией на медицинскую деятельность.</p></div>
+      <div class="card"><span class="ic"><svg class="i"><use href="#i-user"/></svg></span><h3>Кому нужен</h3><p>Пациенту — чтобы получить препарат. Фармацевту — как основание для отпуска. Медорганизации — для учёта.</p></div>
+      <div class="card"><span class="ic"><svg class="i"><use href="#i-pharm"/></svg></span><h3>Роль в отпуске</h3><p>Связывает назначение врача и аптеку. Форма бланка зависит от правового статуса препарата.</p></div>
+    </div>
+  </div>
+  <p class="src"><b>Источник:</b> приказ Минздрава России от 24.11.2021 № 1094н, прил. 1, п. 1, 2, 6.</p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="slide" data-sec="Основы" data-title="Зачем нужен рецепт?">
+  <div class="sh"><div><p class="eyebrow">Основы</p><h2>Зачем нужен рецепт?</h2></div><span class="snum"></span></div>
+  <div class="body">
+    <div class="g5">
+      <div class="card fn"><span class="ic"><svg class="i"><use href="#i-pill"/></svg></span><h3>Назначение препарата</h3><p>Что, в какой дозе и как долго принимать пациенту.</p></div>
+      <div class="card fn"><span class="ic"><svg class="i"><use href="#i-sign"/></svg></span><h3>Подтверждение назначения</h3><p>Подпись и печать медицинского работника.</p></div>
+      <div class="card fn"><span class="ic"><svg class="i"><use href="#i-pharm"/></svg></span><h3>Основание для отпуска</h3><p>Рецептурные препараты аптека отпускает только по рецепту.</p></div>
+      <div class="card fn"><span class="ic"><svg class="i"><use href="#i-doc"/></svg></span><h3>Фиксация информации</h3><p>Кому, когда и кем назначен препарат.</p></div>
+      <div class="card fn"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><h3>Контроль обращения</h3><p>Особые формы и учёт для наркотических, психотропных и других препаратов.</p></div>
+    </div>
+    <div class="flow"><div class="node"><span class="ic"><svg class="i"><use href="#i-steth"/></svg></span><b>Врач</b><p class="nd">Осматривает пациента, определяет показания и назначает препарат. Без показаний рецепт не оформляют.</p></div><span class="arr"><svg class="i"><use href="#i-r"/></svg></span><div class="node"><span class="ic"><svg class="i"><use href="#i-doc"/></svg></span><b>Рецепт</b><p class="nd">Фиксирует назначение на форме, которая соответствует статусу препарата: на бумаге или в электронном виде.</p></div><span class="arr"><svg class="i"><use href="#i-r"/></svg></span><div class="node"><span class="ic"><svg class="i"><use href="#i-pharm"/></svg></span><b>Аптека</b><p class="nd">Проверяет форму бланка, реквизиты, срок действия и дозировки.</p></div><span class="arr"><svg class="i"><use href="#i-r"/></svg></span><div class="node"><span class="ic"><svg class="i"><use href="#i-pill"/></svg></span><b>Отпуск препарата</b><p class="nd">Пациент получает препарат, аптека отмечает отпуск. Часть рецептов остаётся в аптеке на хранение.</p></div></div>
+  </div>
+  <p class="src"><b>Источники:</b> приказ № 1094н, прил. 1, п. 2, 7; приказ Минздрава России от 07.03.2025 № 100н (правила отпуска).</p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="slide" data-sec="Виды бланков" data-title="Основные виды рецептурных бланков">
+  <div class="sh"><div><p class="eyebrow">Виды бланков</p><h2>Основные виды рецептурных бланков</h2></div>
+    <span class="snum"></span></div>
+  <div class="body"><div class="tbl-wrap" id="s4table"></div></div>
+  <p class="src"><b>Источник:</b> приказ № 1094н, прил. 1 (п. 8–11, 20–23), прил. 2–6. Все четыре формы можно оформить и как электронный документ, если такое решение принято в субъекте РФ.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="slide" data-sec="Оформление" data-title="Структура рецепта">
+  <div class="sh"><div><p class="eyebrow">Оформление</p><h2>Структура рецепта</h2><p class="lead" style="margin-top:6px">Форма № 107-1/у: номера на бланке совпадают с пунктами справа.</p></div><span class="snum"></span></div>
+  <div class="split" id="s5">
+    <div class="sheet" id="s5sheet">
+      <div class="tp"><div class="stp" data-k="1"><span class="pin">1</span>Наименование (штамп) медицинской организации: адрес, телефон</div><div class="fid" data-k="11"><span class="pin">11</span>Министерство здравоохранения<br>Российской Федерации<b>Форма № 107-1/у</b>Утверждена приказом Минздрава России<br>от 24.11.2021 № 1094н</div></div>
+      <div class="ttl"><b>РЕЦЕПТ</b><span class="sub">(взрослый, детский — нужное подчеркнуть)</span><span class="dt" data-k="2"><span class="pin">2</span>«__» ________ 20__ г.</span></div>
+      <div class="ln" data-k="3"><span class="pin">3</span><span class="lab">Фамилия, инициалы пациента</span><span class="val ph">Фамилия И. О.</span></div>
+      <div class="ln" data-k="3"><span class="pin">3</span><span class="lab">Дата рождения</span><span class="val ph">число, месяц, год</span></div>
+      <div class="ln" data-k="4"><span class="pin">4</span><span class="lab">Фамилия, инициалы лечащего врача (фельдшера, акушерки)</span><span class="val ph">Фамилия И. О.</span></div>
+      <div class="rp"><div class="rub">руб.|коп.</div><div class="rpb">
+        <div><b>Rp.:</b> <span data-k="6"><span class="pin">6</span><span class="ph">лек. форма</span></span> <span data-k="5"><span class="pin">5</span><span class="ph">наименование</span></span> <span data-k="7"><span class="pin">7</span><span class="ph">дозировка</span></span> <span data-k="8"><span class="pin">8</span><span class="ph">количество</span></span></div>
+        <div data-k="9"><b>D.S.</b> <span class="pin">9</span><span class="ph">способ применения</span></div>
+      </div></div>
+      <div class="sig"><span class="lab" data-k="10"><span class="pin">10</span>Подпись и печать лечащего врача (подпись фельдшера, акушерки)</span><span class="mp" data-k="11">М.П.</span></div>
+      <div class="valid" data-k="11">Рецепт действителен в течение <b>60 дней</b>, до 1 года (___) — нужное подчеркнуть</div>
+    </div>
+    <div class="legend" id="s5legend"></div>
+  </div>
+  <p class="src"><b>Источник:</b> приказ № 1094н, прил. 1, п. 5, 17, 19; прил. 2 (форма № 107-1/у); прил. 3, п. 1–15.</p>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="slide" data-sec="Оформление" data-title="Как заполняется рецепт?">
+  <div class="sh"><div><p class="eyebrow">Оформление</p><h2>Как заполняется рецепт?</h2><p class="lead" style="margin-top:6px">Условный учебный пример. Все данные вымышлены.</p></div><span class="snum"></span></div>
+  <div class="split">
+    <div class="sheet" id="s6sheet">
+      <div class="tp"><div class="stp">ГБУЗ «Учебная поликлиника № 0»<br>г. Образцово, ул. Учебная, д. 1<br>тел. 00-00-00</div><div class="fid">Министерство здравоохранения<br>Российской Федерации<b>Форма № 107-1/у</b>Утверждена приказом Минздрава России<br>от 24.11.2021 № 1094н</div></div>
+      <div class="ttl"><b>РЕЦЕПТ</b><span class="sub"><span class="u">взрослый</span>, детский</span><span class="dt hw" style="font-size:19px">«01» октября 2026 г.</span></div>
+      <div class="ln" data-k="1"><span class="pin">1</span><span class="lab">Фамилия, инициалы пациента</span><span class="val hw">Соколова А. В.</span></div>
+      <div class="ln" data-k="1"><span class="pin">1</span><span class="lab">Дата рождения</span><span class="val hw">14.03.1961</span></div>
+      <div class="ln" data-k="7"><span class="pin">7</span><span class="lab">Фамилия, инициалы лечащего врача</span><span class="val hw">Петров И. С.</span></div>
+      <div class="rp"><div class="rub">руб.|коп.</div><div class="rpb">
+        <div class="hw">Rp.: <span class="pin">3</span>Tab. <span class="pin">2</span>Amlodipini <span class="pin">4</span>5 mg <span class="pin">5</span>N. 30</div>
+        <div class="hw" style="font-size:19px"><span class="pin">6</span>D.S. По 1 таблетке внутрь 1 раз в день утром, 30 дней</div>
+      </div></div>
+      <div class="sig"><span class="lab"><span class="pin">8</span>Подпись и печать лечащего врача</span><span class="hw" style="font-size:26px">Петров</span><span class="mp" style="border-style:solid;border-color:#5C74B8;color:#3E5596">печать<br>врача</span></div>
+      <div class="valid" data-k="8">Рецепт действителен в течение <span class="u"><b>60 дней</b></span>, до 1 года (___)</div>
+      <span class="wm">УЧЕБНЫЙ ОБРАЗЕЦ</span>
+    </div>
+    <div class="steps" id="s6steps"></div>
+  </div>
+  <p class="src"><b>Источник:</b> приказ № 1094н, прил. 1, п. 5, 16, 17, 19; прил. 3, п. 6, 7, 10, 11, 14.</p>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="slide" data-sec="Оформление" data-title="Латинские обозначения в рецептуре">
+  <div class="sh"><div><p class="eyebrow">Оформление</p><h2>Латинские обозначения в рецептуре</h2></div><span class="snum"></span></div>
+  <div class="s7">
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div class="abbr" id="abbr"></div>
+      <div class="lang card">
+        <div><svg class="i"><use href="#i-info"/></svg><span><b>Бумажный рецепт:</b> состав, лекарственная форма и обращение к фармацевту — на латинском или русском языке, в родительном падеже.</span></div>
+        <div><svg class="i"><use href="#i-phone"/></svg><span><b>Электронный рецепт:</b> только на русском языке.</span></div>
+        <div><svg class="i"><use href="#i-user"/></svg><span><b>Способ применения</b> всегда пишут на русском (государственном) языке.</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <p class="small muted">Пример прописи порошков индивидуального изготовления.</p>
+      <div class="sheet" style="font-size:12px;padding:20px 22px 46px">
+        <div class="hw" style="font-size:24px;line-height:1.35">
+          <span class="xk" data-a="rp">Rp.:</span> Acidi ascorbinici 0,1<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Glucosi 0,2<br>
+          <span class="xk" data-a="mf">M. f.</span> pulv.<br>
+          <span class="xk" data-a="dtd">D. t. d.</span> <span class="xk" data-a="n">N. 10</span><br>
+          <span class="xk" data-a="s">S.</span> По 1 порошку 2 раза в день после еды
+        </div>
+        <span class="wm" style="bottom:12px;right:14px;transform:rotate(-4deg)">УЧЕБНЫЙ ПРИМЕР</span>
+      </div>
+      <p class="small muted">Читается так: «Возьми кислоты аскорбиновой 0,1, глюкозы 0,2. Смешай, пусть образуется порошок. Выдай такие дозы числом 10. Обозначь: …»</p>
+    </div>
+  </div>
+  <p class="src"><b>Источник:</b> приказ № 1094н, прил. 1, п. 16, 18 и приложение № 2 к Порядку «Рекомендованные к использованию сокращения при оформлении рецептов».</p>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class="slide" data-sec="Ошибки" data-title="Типичные ошибки оформления">
+  <div class="sh"><div><p class="eyebrow">Ошибки</p><h2>Что нельзя делать при оформлении</h2></div><span class="snum"></span></div>
+  <div class="body"><div class="g3" id="errs"></div></div>
+  <p class="src"><b>Главное правило:</b> рецепт, оформленный с нарушением установленных требований, считается недействительным (приказ № 1094н, прил. 1, п. 25). Врач или руководитель медорганизации обязаны своевременно переоформить рецепт (п. 1).</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section class="slide" data-sec="Ошибки" data-title="Реквизиты и защита бланков">
+  <div class="sh"><div><p class="eyebrow">Ошибки · защита</p><h2>Реквизиты и защита бланков</h2></div><span class="snum"></span></div>
+  <div class="body">
+    <div class="flow sm"><div class="node"><span class="ic"><svg class="i"><use href="#i-doc"/></svg></span><b>Бланк</b><p class="nd">Утверждённая форма для данного препарата</p></div><span class="arr"><svg class="i"><use href="#i-r"/></svg></span><div class="node"><span class="ic"><svg class="i"><use href="#i-hash"/></svg></span><b>Реквизиты</b><p class="nd">Штамп, дата, подпись, печати, серия и номер</p></div><span class="arr"><svg class="i"><use href="#i-r"/></svg></span><div class="node"><span class="ic"><svg class="i"><use href="#i-search"/></svg></span><b>Проверка</b><p class="nd">Фармацевт сверяет форму, реквизиты, срок</p></div><span class="arr"><svg class="i"><use href="#i-r"/></svg></span><div class="node"><span class="ic"><svg class="i"><use href="#i-pill"/></svg></span><b>Отпуск</b><p class="nd">Только по рецепту, прошедшему проверку</p></div></div>
+    <div class="g2 req">
+      <div class="card"><div class="rh"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><h3>Зачем нужны специальные реквизиты</h3></div><p>Подтверждают, что рецепт оформил уполномоченный медработник конкретной медорганизации. Позволяют проверить подлинность бланка и отследить его движение.</p></div>
+      <div class="card"><div class="rh"><span class="ic"><svg class="i"><use href="#i-eye"/></svg></span><h3>Как отличить официальный бланк</h3></div><ul><li>Утверждённая форма, штамп медорганизации</li><li>Серия и номер — у 148-1/у-88, 148-1/у-04(л), 107/у-НП</li><li>107/у-НП — розовая бумага 10 × 15 см, защита уровня «В»</li><li>Печать «Для рецептов» на 148-1/у-88, 148-1/у-04(л), 107/у-НП</li></ul></div>
+      <div class="card"><div class="rh"><span class="ic"><svg class="i"><use href="#i-lock"/></svg></span><h3>Зачем нужен учёт отдельных форм</h3></div><ul><li>Типографские бланки учитывают в пронумерованных, прошнурованных журналах</li><li>Хранят в запираемом металлическом шкафу (сейфе); раз в квартал проверяет комиссия</li><li>107/у-НП — строгая отчётность: врачу не более 20 бланков за раз</li></ul></div>
+      <div class="card"><div class="rh"><span class="ic"><svg class="i"><use href="#i-alert"/></svg></span><h3>Почему нельзя писать на обычном листе</h3></div><p>Если правила требуют установленную форму, рецепт на произвольном листе недействителен и аптека не вправе отпустить препарат. Специальные формы — часть контроля за оборотом наркотических, психотропных и подлежащих учёту препаратов.</p></div>
+    </div>
+  </div>
+  <p class="src"><b>Источник:</b> приказ № 1094н, прил. 1, п. 25; прил. 3, п. 1, 14, 23–31; прил. 5, п. 2, 19–22.</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class="slide" data-sec="Электронный рецепт" data-title="Электронный рецепт">
+  <div class="sh"><div><p class="eyebrow">Электронный рецепт</p><h2>Бумажный и электронный рецепт</h2></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag">С согласия пациента</span><span class="tag">УКЭП медработника</span><span class="tag">По решению субъекта РФ</span></div></div>
+  <div class="body">
+    <div class="tbl-wrap">
+      <table class="t cmp">
+        <thead><tr><th>Критерий</th><th><span class="tag">Бумажный</span></th><th><span class="tag rose">Электронный</span></th></tr></thead>
+        <tbody>
+          <tr><td>Форма</td><td>Утверждённый бланк; заполняется ручкой или на принтере, подпись — от руки</td><td>Электронный документ в информационной системе региона или медорганизации, подписан УКЭП</td></tr>
+          <tr><td>Хранение информации</td><td>Бланки учитываются в журналах; рецепт, оставшийся в аптеке, хранится установленный срок</td><td>Единый реестр электронных рецептов в ГИС субъекта РФ; сроки хранения те же, что для бумажных</td></tr>
+          <tr><td>Передача данных</td><td>Пациент приносит бланк в аптеку</td><td>Аптека находит рецепт в системе, в том числе по СНИЛС; пациент видит рецепт в Госуслугах</td></tr>
+          <tr><td>Контроль</td><td>Проверка штампа, печатей, серии и номера, разборчивости</td><td>Проверка электронной подписи и уникального номера; дату окончания действия рассчитывает система</td></tr>
+          <tr><td>Язык</td><td>Латинский или русский</td><td>Только русский</td></tr>
+          <tr><td>Удобство</td><td>Не зависит от систем и связи; бланк можно потерять или испортить</td><td>Бланк не потеряется; нужна подключённая к системе медорганизация и аптека; по просьбе пациента печатают «Дубликат электронного документа»</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><svg class="i"><use href="#i-info"/></svg><span><b>2026 год:</b> Минздрав предложил эксперимент по использованию электронных рецептов в других регионах (без льготных) и разрабатывает механизм продажи рецептурных препаратов только по электронному рецепту. На момент подготовки это проекты, а не действующие нормы.</span></div>
+  </div>
+  <p class="src"><b>Источники:</b> приказ № 1094н, прил. 1, п. 2, 6, 16; прил. 3, п. 19–22, 26, 32; Фармвестник, 28.05.2026 и 24.07.2026; разъяснение Минздрава, ТАСС, 30.05.2026.</p>
+</section>
+
+<!-- ============ 11 ============ -->
+<section class="slide" data-sec="Электронный рецепт" data-title="Путь рецепта">
+  <div class="sh"><div><p class="eyebrow">Электронный рецепт · процесс</p><h2>Путь рецепта</h2></div><span class="snum"></span></div>
+  <div class="body">
+    <div class="path" id="path11"></div>
+    <div class="path" id="pc11" style="align-items:start"></div>
+  </div>
+  <p class="src"><b>Источники:</b> приказ № 1094н, прил. 1, п. 2, 5, 7; прил. 3, п. 18, 26, 32; приказ № 100н (правила отпуска, с 01.09.2025).</p>
+</section>
+
+<!-- ============ 12 ============ -->
+<section class="slide" data-sec="Тест" data-title="Ситуационное задание">
+  <div class="sh"><div><p class="eyebrow">Тест · задача</p><h2>Найдите 3 ошибки в рецепте</h2><p class="lead" style="margin-top:6px">Ситуационное задание. Все данные вымышлены.</p></div><span class="snum"></span></div>
+  <div class="split">
+    <div class="sheet" id="s12sheet">
+      <div class="tp"><div class="stp hot" data-h="stamp">ГБУЗ «Учебная поликлиника № 0»<br>г. Образцово, ул. Учебная, д. 1<br>тел. 00-00-00</div><div class="fid">Министерство здравоохранения<br>Российской Федерации<b>Форма № 107-1/у</b>Утверждена приказом Минздрава России<br>от 24.11.2021 № 1094н</div></div>
+      <div class="ttl"><b>РЕЦЕПТ</b><span class="sub"><span class="u">взрослый</span>, детский</span><span class="dt hw hot" data-h="date" style="font-size:19px">«01» октября 2026 г.</span></div>
+      <div class="ln hot" data-h="name"><span class="lab">Фамилия, инициалы пациента</span><span class="val hw">Иванова Е. Н.</span></div>
+      <div class="ln hot" data-h="dob"><span class="lab">Дата рождения</span><span class="val"></span></div>
+      <div class="ln hot" data-h="doc"><span class="lab">Фамилия, инициалы лечащего врача</span><span class="val hw">Сергеева О. П.</span></div>
+      <div class="rp"><div class="rub">руб.|коп.</div><div class="rpb">
+        <div class="hw hot" data-h="rp">Rp.: Tab. Enalaprili <span class="strike">10</span> 20 mg N. 20</div>
+        <div class="hw hot" data-h="ds">D.S. Внутреннее.</div>
+      </div></div>
+      <div class="sig hot" data-h="sig"><span class="lab">Подпись и печать лечащего врача</span><span class="hw" style="font-size:26px">Сергеева</span><span class="mp" style="border-style:solid;border-color:#5C74B8;color:#3E5596">печать<br>врача</span></div>
+      <div class="valid">Рецепт действителен в течение <span class="u"><b>60 дней</b></span>, до 1 года (___)</div>
+      <span class="wm">УЧЕБНЫЙ ОБРАЗЕЦ</span>
+    </div>
+    <div class="tasks">
+      <div class="card"><div class="rh"><span class="ic"><svg class="i"><use href="#i-search"/></svg></span><h3>Задание</h3></div><p>Перед вами учебный рецепт формы № 107-1/у. В его оформлении допущены <b>3 ошибки</b>. Найдите их и назовите, какое требование нарушено.</p></div>
+      <div class="card"><div class="rh"><span class="ic"><svg class="i"><use href="#i-check"/></svg></span><h3>Что проверить</h3></div><ul><li>Все ли обязательные сведения о пациенте указаны</li><li>Нет ли исправлений в назначении</li><li>Правильно ли записан способ применения</li><li>Есть ли подпись, печать и срок действия</li></ul></div>
+      <div class="note"><svg class="i"><use href="#i-info"/></svg><span>Ответ — на следующем слайде.</span></div>
+    </div>
+  </div>
+  <p class="src"><b>Опора:</b> приказ № 1094н, прил. 1, п. 17, 25; прил. 3, п. 7, 13, 16.</p>
+</section>
+
+<section class="slide" data-sec="Тест" data-title="Ответ к ситуационному заданию">
+  <div class="sh"><div><p class="eyebrow">Тест · ответ</p><h2>Ответ: 3 ошибки в рецепте</h2><p class="lead" style="margin-top:6px">Каждая из них делает рецепт недействительным — его нужно переоформить.</p></div><span class="snum"></span></div>
+  <div class="split">
+    <div class="sheet" >
+      <div class="tp"><div class="stp" data-h="stamp">ГБУЗ «Учебная поликлиника № 0»<br>г. Образцово, ул. Учебная, д. 1<br>тел. 00-00-00</div><div class="fid">Министерство здравоохранения<br>Российской Федерации<b>Форма № 107-1/у</b>Утверждена приказом Минздрава России<br>от 24.11.2021 № 1094н</div></div>
+      <div class="ttl"><b>РЕЦЕПТ</b><span class="sub"><span class="u">взрослый</span>, детский</span><span class="dt hw" data-h="date" style="font-size:19px">«01» октября 2026 г.</span></div>
+      <div class="ln" data-h="name"><span class="lab">Фамилия, инициалы пациента</span><span class="val hw">Иванова Е. Н.</span></div>
+      <div class="ln miss"><span class="pin">1</span><span class="lab">Дата рождения</span><span class="val ph" style="color:#B3342F">не указана</span></div>
+      <div class="ln" data-h="doc"><span class="lab">Фамилия, инициалы лечащего врача</span><span class="val hw">Сергеева О. П.</span></div>
+      <div class="rp"><div class="rub">руб.|коп.</div><div class="rpb">
+        <div class="hw miss"><span class="pin">2</span>Rp.: Tab. Enalaprili <span class="strike">10</span> 20 mg N. 20</div>
+        <div class="hw miss"><span class="pin">3</span>D.S. Внутреннее.</div>
+      </div></div>
+      <div class="sig" data-h="sig"><span class="lab">Подпись и печать лечащего врача</span><span class="hw" style="font-size:26px">Сергеева</span><span class="mp" style="border-style:solid;border-color:#5C74B8;color:#3E5596">печать<br>врача</span></div>
+      <div class="valid">Рецепт действителен в течение <span class="u"><b>60 дней</b></span>, до 1 года (___)</div>
+      <span class="wm">УЧЕБНЫЙ ОБРАЗЕЦ</span>
+    </div>
+    <div class="ans">
+      <div class="ansi"><span class="n">1</span><div><b>Не указана дата рождения</b><p>В форме № 107-1/у дата рождения пациента обязательна: число, месяц, год.</p><p class="ref">№ 1094н, прил. 3, п. 7</p></div></div>
+      <div class="ansi"><span class="n">2</span><div><b>Исправление в дозировке</b><p>Исправления в рецепте не допускаются. Рецепт с исправленной дозой недействителен — нужен новый бланк.</p><p class="ref">№ 1094н, прил. 3, п. 16</p></div></div>
+      <div class="ansi"><span class="n">3</span><div><b>Общее указание «Внутреннее»</b><p>Нельзя ограничиваться общими указаниями. Нужно указать дозу, путь введения, частоту, время приёма и длительность.</p><p class="ref">№ 1094н, прил. 3, п. 13; прил. 1, п. 17</p></div></div>
+      <p class="small muted">Остальные поля заполнены верно.</p>
+    </div>
+  </div>
+  <p class="src"><b>Главное правило:</b> рецепт, оформленный с нарушением требований, считается недействительным (приказ № 1094н, прил. 1, п. 25).</p>
+</section>
+
+<!-- ============ quiz ============ -->
+<section class="slide" data-sec="Тест" data-title="Мини-викторина">
+  <div class="sh"><div><p class="eyebrow">Тест</p><h2>Мини-викторина</h2><p class="lead" style="margin-top:6px">Выберите правильный ответ. Ответы — на следующем слайде.</p></div><span class="snum"></span></div>
+  <div class="qgrid"><div class="qi"><p class="qt"><span class="qn">1</span>Для чего используется рецептурный бланк?</p><ol class="qo"><li><span class="l">А</span>Для оформления назначения лекарственного препарата пациенту</li><li><span class="l">Б</span>Для записи результатов анализов</li><li><span class="l">В</span>Для направления на госпитализацию</li><li><span class="l">Г</span>Для справки о временной нетрудоспособности</li></ol></div><div class="qi"><p class="qt"><span class="qn">2</span>Кто оформляет рецепт?</p><ol class="qo"><li><span class="l">А</span>Фармацевт аптеки</li><li><span class="l">Б</span>Лечащий врач, фельдшер или акушерка с функциями лечащего врача</li><li><span class="l">В</span>Медсестра процедурного кабинета</li><li><span class="l">Г</span>Пациент по образцу</li></ol></div><div class="qi"><p class="qt"><span class="qn">3</span>Какие сведения обязательны в рецепте формы № 107-1/у?</p><ol class="qo"><li><span class="l">А</span>Только название препарата и подпись</li><li><span class="l">Б</span>Диагноз и группа крови</li><li><span class="l">В</span>Пациент, дата рождения, врач, препарат с дозировкой и количеством, способ применения</li><li><span class="l">Г</span>Паспортные данные пациента</li></ol></div><div class="qi"><p class="qt"><span class="qn">4</span>Сколько действует рецепт формы № 148-1/у-88?</p><ol class="qo"><li><span class="l">А</span>15 дней</li><li><span class="l">Б</span>30 дней</li><li><span class="l">В</span>60 дней</li><li><span class="l">Г</span>1 год</li></ol></div><div class="qi"><p class="qt"><span class="qn">5</span>Что допускается при оформлении рецепта?</p><ol class="qo"><li><span class="l">А</span>Исправить дозировку и заверить подписью</li><li><span class="l">Б</span>Указать способ применения «Внутреннее»</li><li><span class="l">В</span>Заполнить реквизиты на принтере, кроме подписи врача</li><li><span class="l">Г</span>Сократить название препарата до первых букв</li></ol></div><div class="qi"><p class="qt"><span class="qn">6</span>Чем электронный рецепт отличается от бумажного?</p><ol class="qo"><li><span class="l">А</span>Действует бессрочно</li><li><span class="l">Б</span>Подписывается УКЭП и формируется в информационной системе</li><li><span class="l">В</span>В нём не указывают способ применения</li><li><span class="l">Г</span>Оформляется только на латыни</li></ol></div><div class="qi"><p class="qt"><span class="qn">7</span>Что означает сокращение Rp.?</p><ol class="qo"><li><span class="l">А</span>Repete — «Повтори»</li><li><span class="l">Б</span>Recipe — «Возьми»</li><li><span class="l">В</span>Da. Signa — «Выдай. Обозначь»</li><li><span class="l">Г</span>Cito — «Срочно»</li></ol></div></div>
+</section>
+
+<section class="slide" data-sec="Тест" data-title="Ответы к викторине">
+  <div class="sh"><div><p class="eyebrow">Тест · ответы</p><h2>Ответы к викторине</h2></div><span class="snum"></span></div>
+  <div class="body"><table class="t qa"><thead><tr><th>№</th><th>Ответ</th><th>Правильный вариант и пояснение</th><th>Норма</th></tr></thead><tbody><tr><td>1</td><td><span class="al">А</span></td><td><b>Для оформления назначения лекарственного препарата пациенту</b><br><span class="muted">Рецепт фиксирует назначение препарата пациенту и служит основанием для отпуска.</span></td><td class="mono small">№ 1094н, прил. 1, п. 2</td></tr><tr><td>2</td><td><span class="al">Б</span></td><td><b>Лечащий врач, фельдшер или акушерка с функциями лечащего врача</b><br><span class="muted">Рецепт оформляет лечащий врач; фельдшер и акушерка — если на них возложены его функции.</span></td><td class="mono small">№ 1094н, прил. 1, п. 1</td></tr><tr><td>3</td><td><span class="al">В</span></td><td><b>Пациент, дата рождения, врач, препарат с дозировкой и количеством, способ применения</b><br><span class="muted">Форма содержит сведения о пациенте, враче, препарате, способ применения, подпись и печать.</span></td><td class="mono small">№ 1094н, прил. 2, 3</td></tr><tr><td>4</td><td><span class="al">А</span></td><td><b>15 дней</b><br><span class="muted">Рецепт на бланке № 148-1/у-88 действителен 15 дней со дня оформления.</span></td><td class="mono small">№ 1094н, прил. 1, п. 20</td></tr><tr><td>5</td><td><span class="al">В</span></td><td><b>Заполнить реквизиты на принтере, кроме подписи врача</b><br><span class="muted">Печатать реквизиты можно, кроме подписи. Исправления, «Внутреннее» и непонятные сокращения запрещены.</span></td><td class="mono small">№ 1094н, прил. 3, п. 4, 13, 16</td></tr><tr><td>6</td><td><span class="al">Б</span></td><td><b>Подписывается УКЭП и формируется в информационной системе</b><br><span class="muted">Электронный рецепт формируется в ГИС или МИС, подписывается УКЭП и оформляется на русском.</span></td><td class="mono small">№ 1094н, прил. 1, п. 2, 6, 16</td></tr><tr><td>7</td><td><span class="al">Б</span></td><td><b>Recipe — «Возьми»</b><br><span class="muted">Rp. — Recipe, «Возьми». С него начинается пропись.</span></td><td class="mono small">№ 1094н, прил. 2 к Порядку</td></tr></tbody></table></div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section class="slide" data-sec="Итоги" data-title="Интересные факты">
+  <div class="sh"><div><p class="eyebrow">Итоги</p><h2>Интересные факты</h2></div><span class="snum"></span></div>
+  <div class="facts">
+    <div class="card fact w"><span class="big">Rp. ℞</span><p>Слово «рецепт» происходит от латинского <i>recipe</i> — «возьми». С этого слова традиционно начинается пропись, отсюда сокращение Rp. и знак ℞.</p><span class="fsrc">Приказ № 1094н, прил. 2 к Порядку: Rp. — Recipe — «Возьми»</span></div>
+    <div class="card fact w"><span class="big">≈ 4 000 лет</span><p>Одна из древнейших известных медицинских записей с прописями лекарств — шумерская глиняная табличка из Ниппура, конец III тысячелетия до н. э. Хранится в музее Пенсильванского университета.</p><span class="fsrc">Penn Museum, «Medical Tablet», объект 218008</span></div>
+    <div class="card fact"><span class="big">2022</span><p>С 1 марта 2022 года состав препарата на бумажном рецепте можно писать не только на латыни, но и на русском. Электронный рецепт — только на русском.</p><span class="fsrc">Приказ № 1094н, прил. 1, п. 16</span></div>
+    <div class="card fact"><span class="big">10 × 15</span><p>Бланк 107/у-НП печатают на розовой бумаге 10 × 15 см. Это защищённая от подделок полиграфическая продукция уровня «В» с серией и номером.</p><span class="fsrc">Приказ № 1094н, прил. 5, п. 2</span></div>
+    <div class="card fact"><span class="big">СНИЛС</span><p>Для покупки по электронному рецепту смартфон не обязателен: фармацевт находит рецепт по СНИЛС пациента. Сам рецепт можно посмотреть в Госуслугах.</p><span class="fsrc">Разъяснение Минздрава России, май 2026</span></div>
+  </div>
+  <p class="src"><b>Источники:</b> см. слайд 18.</p>
+</section>
+
+<!-- ============ 15 ============ -->
+<section class="slide" data-sec="Итоги" data-title="Главное, что нужно запомнить">
+  <div class="s15">
+    <div style="display:flex;flex-direction:column;gap:16px"><p class="eyebrow">Итоги</p><h2>Главное, что нужно запомнить</h2><p class="lead">Пять мыслей, которые стоит унести с занятия.</p></div>
+    <div class="keys">
+      <div class="key"><div><b>Что это</b><span>Рецептурный бланк — утверждённая форма для назначения лекарственного препарата конкретному пациенту.</span></div></div>
+      <div class="key"><div><b>Зачем нужен</b><span>Это основание для отпуска в аптеке и инструмент контроля оборота отдельных групп препаратов.</span></div></div>
+      <div class="key"><div><b>Какие бывают</b><span>107-1/у, 148-1/у-88, 148-1/у-04(л) и 107/у-НП — на бумаге или в форме электронного документа.</span></div></div>
+      <div class="key"><div><b>Что указывают</b><span>Медорганизацию, дату, пациента, медработника, препарат (наименование, форму, дозировку, количество), способ применения, подпись и реквизиты.</span></div></div>
+      <div class="key"><div><b>Почему важна точность</b><span>Рецепт с нарушениями недействителен: пациент не получит препарат, а ошибка в дозе может ему навредить.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 16 ============ -->
+<section class="slide" data-sec="Итоги" data-title="Источники">
+  <div class="sh"><div><p class="eyebrow">Итоги</p><h2>Источники</h2></div><span class="snum"></span></div>
+  <div class="srcs">
+    <div class="sg">
+      <h3>Нормативные документы</h3>
+      <ol>
+        <li><a href="https://legalacts.ru/doc/prikaz-minzdrava-rossii-ot-24112021-n-1094n-ob-utverzhdenii/" target="_blank" rel="noopener">Приказ Минздрава России от 24.11.2021 № 1094н</a> «Об утверждении Порядка назначения лекарственных препаратов, форм рецептурных бланков…» Действует с 01.03.2022 до 01.03.2028.<span class="wh">Слайды 2–17: формы, сроки, реквизиты, учёт, электронный рецепт, сокращения</span></li>
+        <li><a href="https://pharmvestnik.ru/documents/100n-ot-07-03-2025.html" target="_blank" rel="noopener">Приказ Минздрава России от 07.03.2025 № 100н</a> «Об утверждении правил отпуска лекарственных препаратов…» Действует с 01.09.2025.<span class="wh">Слайды 3, 11: отпуск, отсроченное обслуживание, хранение рецептов</span></li>
+        <li>Федеральный закон от 12.04.2010 № 61-ФЗ «Об обращении лекарственных средств».<span class="wh">Слайды 2, 3: отпуск рецептурных препаратов</span></li>
+        <li>Федеральный закон от 21.11.2011 № 323-ФЗ «Об основах охраны здоровья граждан в РФ», ст. 91, 91.1.<span class="wh">Слайд 10: информационные системы в сфере здравоохранения</span></li>
+        <li>Федеральный закон от 08.01.1998 № 3-ФЗ «О наркотических средствах и психотропных веществах», ст. 26.<span class="wh">Слайды 4, 10: рецепты на НС и ПВ</span></li>
+      </ol>
+    </div>
+    <div class="sg">
+      <h3>Отраслевые и учебные источники</h3>
+      <ol start="6">
+        <li><a href="https://pharmvestnik.ru/content/news/Minzdrav-izmenil-sroki-otsrochennogo-obslujivaniya-receptov.html" target="_blank" rel="noopener">Фармвестник: Минздрав изменил сроки отсроченного обслуживания рецептов</a>, 11.04.2025<span class="wh">Слайд 11</span></li>
+        <li><a href="https://pharmvestnik.ru/content/news/minzdrav-rf-predlojil-polzovatsya-elektronnymi-receptami-bez-privyazki-k-regionu.html" target="_blank" rel="noopener">Фармвестник: электронные рецепты без привязки к региону</a>, 24.07.2026; <a href="https://pharmvestnik.ru/content/news/elektronnyi-recept-mojet-stat-obyazatelnym-dlya-pokupki-recepturnyh-lekarstv.html" target="_blank" rel="noopener">электронный рецепт может стать обязательным</a>, 28.05.2026<span class="wh">Слайд 10</span></li>
+        <li><a href="https://profile.ru/?p=1865824" target="_blank" rel="noopener">Profile.ru / ТАСС: разъяснение Минздрава об электронных рецептах</a>, 30.05.2026<span class="wh">Слайды 10, 16</span></li>
+        <li><a href="https://ppt.ru/art/med/poryadok-i-oformlenie-unichtozheniya-retsepturnykh-blankov-v-apteke" target="_blank" rel="noopener">ppt.ru: сроки хранения рецептов в аптеке по приказу № 100н</a><span class="wh">Слайд 11</span></li>
+        <li>Казанский ГМУ: учебный материал «Фармацевтическая экспертиза рецептов» (e.kazangmu.ru)<span class="wh">Слайды 4, 11</span></li>
+        <li><a href="https://penn.museum/collections/object/218008" target="_blank" rel="noopener">Penn Museum: «Medical Tablet», Ниппур</a><span class="wh">Слайд 16</span></li>
+      </ol>
+    </div>
+  </div>
+  <p class="src">Нормативные сведения актуальны на 1 октября 2026 года. Официальные тексты актов публикуются на портале pravo.gov.ru — перед занятием сверяйте редакцию.</p>
+</section>
+
+    </div>
+  </main>
+
+  <footer class="bar">
+    <button class="btn" id="prev"><svg class="i"><use href="#i-l"/></svg><span class="lbl">НАЗАД</span></button>
+    <div class="prog"><div class="track"><i id="fill"></i></div><span class="count" id="count">1 / 16</span></div>
+    <button class="btn" id="allbtn"><svg class="i"><use href="#i-grid"/></svg><span class="lbl">Все слайды</span></button>
+    <button class="btn primary" id="next"><span class="lbl">ДАЛЕЕ</span><svg class="i"><use href="#i-r"/></svg></button>
+  </footer>
+</div>
+
+<div class="ov" id="ov" hidden>
+  <div class="ovp" role="dialog" aria-modal="true" aria-labelledby="ovt">
+    <div class="ovh"><h3 id="ovt">Все слайды</h3><button class="iconbtn" id="ovx" aria-label="Закрыть"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <div class="ovg" id="ovg"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const ico=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
+  const slides=$$('.slide'); const N=slides.length; let cur=0;
+  const SECS=['Основы','Виды бланков','Оформление','Ошибки','Электронный рецепт','Тест','Итоги'];
+
+  /* ---------- section nav ---------- */
+  const secnav=$('#secnav');
+  SECS.forEach(s=>{const b=document.createElement('button');b.textContent=s;b.onclick=()=>go(slides.findIndex(x=>x.dataset.sec===s));secnav.appendChild(b);});
+
+  /* ---------- overview ---------- */
+  const ovg=$('#ovg');
+  slides.forEach((s,i)=>{const b=document.createElement('button');b.innerHTML=`<span class="k">${String(i+1).padStart(2,'0')} · ${s.dataset.sec}</span><span class="t">${s.dataset.title}</span>`;b.onclick=()=>{closeOv();go(i)};ovg.appendChild(b);});
+  const ov=$('#ov');
+  function openOv(){ov.hidden=false;$$('button',ovg).forEach((b,i)=>b.setAttribute('aria-current',i===cur));$('#ovx').focus()}
+  function closeOv(){ov.hidden=true;$('#allbtn').focus()}
+  $('#allbtn').onclick=openOv;$('#ovx').onclick=closeOv;ov.addEventListener('click',e=>{if(e.target===ov)closeOv()});
+
+  /* ---------- navigation ---------- */
+  function go(i){
+    i=Math.max(0,Math.min(N-1,i)); if(i<0)return;
+    slides[cur].classList.remove('active'); cur=i; slides[cur].classList.add('active');
+    $('#count').textContent=`${cur+1} / ${N}`;
+    $('#fill').style.width=((cur+1)/N*100)+'%';
+    $('#prev').disabled=cur===0; $('#next').disabled=cur===N-1;
+    const sec=slides[cur].dataset.sec;
+    $$('button',secnav).forEach(b=>{const on=b.textContent===sec;b.setAttribute('aria-current',on);if(on&&b.scrollIntoView)b.scrollIntoView({block:'nearest',inline:'nearest'})});
+    try{history.replaceState(null,'','#s'+(cur+1))}catch(e){}
+    if(fluid.matches) window.scrollTo({top:0});
+  }
+  $('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+  $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(+b.dataset.go)));
+  document.addEventListener('keydown',e=>{
+    if(!ov.hidden){if(e.key==='Escape')closeOv();return}
+    if(e.target.closest('summary'))return;
+    if(['ArrowRight','PageDown'].includes(e.key)){go(cur+1);e.preventDefault()}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){go(cur-1);e.preventDefault()}
+    else if(e.key==='Home'){go(0)} else if(e.key==='End'){go(N-1)}
+  });
+
+  /* ---------- scaling ---------- */
+  const fluid=matchMedia('(max-width:760px)'); const vp=$('#vp'), deck=$('#deck');
+  function fit(){
+    if(fluid.matches){deck.style.transform='';deck.style.left='';deck.style.top='';return}
+    const pad=18, w=vp.clientWidth-pad*2, h=vp.clientHeight-pad*2;
+    const s=Math.min(w/1280,h/720);
+    deck.style.transform=`scale(${s})`;
+    deck.style.left=((vp.clientWidth-1280*s)/2)+'px';
+    deck.style.top=((vp.clientHeight-720*s)/2)+'px';
+  }
+  addEventListener('resize',fit); fluid.addEventListener?.('change',fit);
+
+  const F=[
+    {id:'107-1/у',nm:'Рецептурный бланк',chip:'',valid:'60 дней · до 1 года',
+     use:['Большинство рецептурных препаратов, для которых не требуется другая форма','Отдельные комбинированные препараты, например с псевдоэфедрином до 30 мг или хлордиазепоксидом до 10 мг на дозу'],
+     feat:['Срок действия 60 дней; при длительном курсовом лечении — до 1 года с надписью «По специальному назначению»','До 3 наименований на бланке; только 1 — для антипсихотиков, анксиолитиков, снотворных и антидепрессантов','Бланк можно изготовить и заполнить на компьютере, кроме подписи','Печать «Для рецептов» не обязательна'],
+     info:['Штамп медорганизации, дата, «взрослый / детский»','Фамилия, инициалы и дата рождения пациента','Фамилия, инициалы врача','Rp.: препарат, форма, дозировка, количество, способ применения','Подпись и печать врача, срок действия'],
+     t:['Большинство рецептурных препаратов, не требующих особой формы','60 дней (до 1 года по спец. назначению); до 3 наименований; можно печатать на компьютере','Штамп МО, дата, пациент (Ф. И. О., дата рождения), врач, Rp., подпись и печать']},
+    {id:'148-1/у-88',nm:'Рецептурный бланк',chip:'',valid:'15 дней',
+     use:['Психотропные препараты списка III','Препараты из перечня предметно-количественного учёта (ПКУ)','НС и ПВ списка II в виде трансдермальных систем и в сочетании с антагонистом опиоидных рецепторов','Отдельные комбинированные препараты, например с кодеином до 20 мг на дозу'],
+     feat:['Срок действия 15 дней','Изготавливается только типографским способом, имеет серию и номер','Одно наименование на бланке','Подпись и печать врача + печать медорганизации «Для рецептов»'],
+     info:['Всё, что указывают в 107-1/у','Адрес места жительства или номер медицинской карты пациента','Серия и номер бланка'],
+     t:['Психотропные списка III, препараты ПКУ, ТТС списка II, отдельные комбинированные','15 дней; только типографский; серия и номер; 1 наименование; печать «Для рецептов»','То же, что в 107-1/у, + адрес пациента или № медкарты']},
+    {id:'148-1/у-04(л)',nm:'Рецепт для льготного обеспечения',chip:'dbl',valid:'30 · 90 · 15 дней',
+     use:['Препараты для граждан, имеющих право на бесплатное получение лекарств или получение со скидкой'],
+     feat:['30 дней; 90 дней — гражданам пенсионного возраста, инвалидам I группы, детям-инвалидам и при хронических заболеваниях (курс до 180 дней)','15 дней, если оформляется вместе с 107/у-НП, 107-1/у или 148-1/у-88 на НС, ПВ, ПКУ','На бумаге — два экземпляра; корешок отдают пациенту','Цифровое кодирование; одно наименование на бланке'],
+     info:['Код медорганизации (ОГРН), серия с кодом субъекта РФ','Код категории граждан и код заболевания по МКБ','Источник финансирования и процент оплаты','СНИЛС, полис ОМС, номер медкарты','Телефон для согласования замены препарата'],
+     t:['Льготное обеспечение: бесплатно или со скидкой','30 / 90 / 15 дней; два экземпляра; корешок; цифровое кодирование; 1 наименование','+ СНИЛС, полис ОМС, код категории, код по МКБ, финансирование, % оплаты']},
+    {id:'107/у-НП',nm:'Специальный рецептурный бланк на наркотическое средство или психотропное вещество',chip:'pinkc',valid:'15 дней',
+     use:['Наркотические и психотропные препараты списка II, кроме трансдермальных систем и сочетаний с антагонистом опиоидных рецепторов'],
+     feat:['Срок действия 15 дней','Розовая бумага 10 × 15 см, защищённая полиграфия уровня «В», серия и номер','Документ строгой отчётности; врачу выдают не более 20 бланков за раз','Количество — прописью; одно наименование на бланке'],
+     info:['Фамилия, имя, отчество пациента полностью и возраст (полных лет)','Полис ОМС и номер медицинской карты','Ф. И. О. врача полностью; подпись и личная печать','Печать «Для рецептов» и подпись уполномоченного лица','Отметка аптеки об отпуске'],
+     t:['НС и ПВ списка II','15 дней; розовый защищённый бланк; строгая отчётность; количество прописью','Ф. И. О. полностью, возраст, полис ОМС, № медкарты, печать «Для рецептов», отметка аптеки']}
+  ];
+  const S5=[
+    ['Медицинская организация','Штамп в левом верхнем углу: наименование, адрес, телефон'],
+    ['Дата','Дата оформления — от неё отсчитывают срок действия'],
+    ['Пациент','Фамилия, инициалы, дата рождения; детям до 1 года — число полных месяцев'],
+    ['Медработник','Фамилия и инициалы лечащего врача, фельдшера или акушерки'],
+    ['Лекарственный препарат','По МНН; если его нет — группировочное, химическое или торговое наименование'],
+    ['Лекарственная форма','Таблетки, капсулы, раствор, мазь и т. д.'],
+    ['Дозировка','Как в инструкции: мг, г или мг/мл с общим объёмом'],
+    ['Количество','Сколько единиц выдать; на 107/у-НП — прописью'],
+    ['Способ применения','Путь введения, доза, частота, время приёма, длительность — на русском'],
+    ['Подпись','Подпись и печать медицинского работника'],
+    ['Реквизиты','Номер формы, место печати, срок действия; на других формах — серия, номер, «Для рецептов»']
+  ];
+  const S6=[
+    ['Данные пациента','Фамилия и инициалы, дата рождения полностью: число, месяц, год.'],
+    ['Наименование препарата','Amlodipini — МНН в родительном падеже.'],
+    ['Лекарственная форма','Tab. — таблетки.'],
+    ['Дозировка','5 mg — количество действующего вещества в одной таблетке, по инструкции.'],
+    ['Количество','N. 30 — «числом 30» таблеток, на курс 30 дней.'],
+    ['Способ применения','Доза, путь, частота, время и длительность — на русском языке.'],
+    ['Данные медицинского работника','Фамилия и инициалы врача, оформившего рецепт.'],
+    ['Подпись и реквизиты','Подпись и печать врача, штамп медорганизации, подчёркнутый срок действия.']
+  ];
+  const AB=[
+    ['rp','Rp.','Recipe','Возьми','Начало прописи'],
+    ['dtd','D. t. d.','Da tales doses','Выдай такие дозы','Когда нужно несколько одинаковых доз'],
+    ['mf','M. f.','Misce, fiat','Смешай, пусть образуется','Для лекарств, которые готовит аптека'],
+    ['ds','D. S.','Da. Signa','Выдай. Обозначь','Перед способом применения'],
+    ['n','N.','Numero','Числом','Количество единиц: N. 10'],
+    ['s','S.','Signa','Обозначь','Далее — как принимать']
+  ];
+  const ER=[
+    ['doc','Нет обязательных сведений','Пропущена дата, дата рождения пациента или Ф. И. О. врача.','Рецепт недействителен, препарат не отпустят — пациент вернётся к врачу.','прил. 3, п. 6–10'],
+    ['pill','Ошибка в дозировке','Доза не соответствует инструкции; для препаратов ПКУ доза выше высшего однократного приёма не написана прописью с «!».','Риск для здоровья пациента; фармацевт не отпустит препарат без уточнения.','прил. 1, п. 13, 14, 19'],
+    ['pen','Неразборчиво или с исправлениями','Бланк заполнен не чернилами или не шариковой ручкой, есть исправления.','Исправления не допускаются — нужен новый рецепт.','прил. 3, п. 3, 16'],
+    ['search','Неправильно указан препарат','Сокращение названия, по которому нельзя понять, какой препарат назначен.','Аптека не может установить препарат и не отпустит его.','прил. 1, п. 5, 16'],
+    ['sign','Нет реквизитов','Нет подписи, печати врача или печати «Для рецептов» там, где она нужна.','Подлинность рецепта не подтверждена — отпуск невозможен.','прил. 3, п. 14'],
+    ['alert','Нарушены требования','Не та форма бланка, лишние наименования на бланке, общие указания «Внутреннее», «Известно».','Рецепт недействителен и подлежит переоформлению.','прил. 1, п. 1, 25; прил. 3, п. 13, 15']
+  ];
+  const P=[
+    ['steth','Врач','Осматривает пациента и определяет показания. Без показаний рецепт не оформляют.','п. 7'],
+    ['pill','Назначение','Препарат назначают по МНН; сведения вносят в медицинскую документацию.','п. 2, 5'],
+    ['pen','Оформление','Выбирают форму по статусу препарата: бумага или электронный документ с УКЭП.','п. 2, 8–11'],
+    ['search','Проверка','Фармацевтическая экспертиза: форма, реквизиты, срок действия, дозы.','п. 25'],
+    ['pharm','Аптека','Если препарата нет, рецепт принимают на отсроченное обслуживание.','№ 100н'],
+    ['check','Отпуск','Препарат выдают, на рецепте ставят отметку. По льготному рецепту пациенту отдают корешок.','прил. 3, п. 18'],
+    ['db','Учёт и хранение','Часть рецептов хранится в аптеке (льготные — 3 года); электронные — в ГИС региона.','№ 100н; п. 26, 32']
+  ];
+
+  /* static renderers (no interactivity) */
+  $('#s4table').innerHTML=`<table class="t"><thead><tr><th>Вид бланка</th><th>Для чего применяется</th><th>Особенности</th><th>Какие сведения содержит</th></tr></thead><tbody>${F.map(f=>`<tr><td>№ ${f.id}<br><span class="tag rose" style="margin-top:6px;font-family:var(--f-body)">${f.valid}</span></td><td>${f.t[0]}</td><td>${f.t[1]}</td><td>${f.t[2]}</td></tr>`).join('')}</tbody></table>`;
+  $('#s5legend').innerHTML=S5.map((x,i)=>`<div class="li"><span class="n">${i+1}</span><span><b>${x[0]}</b><span>${x[1]}</span></span></div>`).join('');
+  $('#s6steps').innerHTML=S6.map((x,i)=>`<div class="st"><span class="n">${i+1}</span><span><b>${x[0]}</b><span>${x[1]}</span></span></div>`).join('');
+  $('#abbr').innerHTML=AB.map(a=>`<div class="ab"><span class="code">${a[1]}</span><i>${a[2]}</i><b>${a[3]}</b><span>${a[4]}</span></div>`).join('');
+  $('#errs').innerHTML=ER.map(e=>`<div class="card err"><div class="hd"><span class="ic">${ico(e[0])}</span><h3>${e[1]}</h3></div><p>${e[2]}</p><div class="cons">${ico('cons')}<span>${e[3]}</span></div><span class="ref">№ 1094н, ${e[4]}</span></div>`).join('');
+  $('#path11').innerHTML=P.map(p=>`<div class="pn"><span class="dot">${ico(p[0])}</span><span><b>${p[1]}</b><br><small>${p[3]}</small></span></div>`).join('');
+  $('#pc11').innerHTML=P.map(p=>`<div class="pc">${p[2]}</div>`).join('');
+  if(fluid.matches){const nodes=$$('.pn'),cs=$$('.pc');nodes.forEach((n,i)=>n.after(cs[i]));$('#pc11').remove()}
+  slides.forEach((sl,i)=>{const n=sl.querySelector('.snum');if(n)n.textContent=String(i+1).padStart(2,'0')});
+
+  /* ---------- start ---------- */
+  const m=/^#s(\d+)$/.exec(location.hash); const start=m?Math.min(N,Math.max(1,+m[1]))-1:0;
+  slides[0].classList.add('active'); go(start); fit();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
+})();
+</script>
+</body>
+</html>
